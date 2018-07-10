@@ -1,0 +1,51 @@
+
+plugins {
+    id 'java-library'
+    id "org.jetbrains.kotlin.jvm" version "1.2.51"
+    id "org.jetbrains.kotlin.kapt" version "1.2.51"
+}
+
+ext {
+    kotlinVersion = '1.2.51'
+    vertxVersion = "3.6.0-SNAPSHOT"
+}
+
+sourceCompatibility = 1.8
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
+dependencies {
+    compile "io.vertx:vertx-core:$vertxVersion"
+    compile "io.vertx:vertx-web:$vertxVersion"
+    compile "io.vertx:vertx-service-proxy:$vertxVersion"
+    compile "io.vertx:vertx-codegen:$vertxVersion"
+    compile "io.vertx:vertx-lang-js:$vertxVersion"
+//    compile "io.vertx:vertx-lang-kotlin:$vertxVersion"
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+
+    kapt "io.vertx:vertx-service-proxy:$vertxVersion:processor"
+}
+
+kapt{
+
+}
+
+sourceSets {
+    generated{
+        java.srcDir "${projectDir}/src/main/generated"
+    }
+}
+
+repositories {
+    mavenLocal()
+    jcenter()
+}
