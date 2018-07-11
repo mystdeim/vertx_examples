@@ -8,6 +8,7 @@ import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.StaticHandler;
 import io.vertx.ext.web.handler.sockjs.BridgeOptions;
 import io.vertx.ext.web.handler.sockjs.SockJSHandler;
+import io.vertx.kotlin.coroutines.CoroutineVerticle;
 import mystdeim.vertx_examples.mvn_java_proxy.model.Account;
 import mystdeim.vertx_examples.mvn_java_proxy.service.AccountService;
 import mystdeim.vertx_examples.mvn_java_proxy.verticle.AccountVerticle;
@@ -45,5 +46,8 @@ public class App
         router.route().handler(StaticHandler.create());
         vertx.createHttpServer().requestHandler(router).listen(8080);
         out.println("Web-api was exposed");
+
+        // Test
+        CoroutineVerticle verticle;
     }
 }

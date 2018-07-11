@@ -42,12 +42,6 @@
     </dependency>
 
     <dependency>
-        <groupId>io.vertx</groupId>
-        <artifactId>vertx-lang-kotlin</artifactId>
-        <version>${project.version}</version>
-    </dependency>
-
-    <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-lang-kotlin-codegen</artifactId>
       <version>${project.version}</version>
@@ -68,7 +62,6 @@
       <scope>provided</scope>
     </dependency>
 
-
   </dependencies>
 
   <build>
@@ -87,7 +80,7 @@
               ${project.basedir}/src/main/generated
             </generatedSourcesDirectory>
             <compilerArgs>
-              <arg>-AoutputDirectory=${project.basedir}/src/main</arg>
+              <arg>-Acodegen.output=${project.basedir}/src/main</arg>
             </compilerArgs>
           </configuration>
         </plugin>
