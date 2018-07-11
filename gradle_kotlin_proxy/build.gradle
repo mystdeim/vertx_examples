@@ -27,11 +27,12 @@ dependencies {
     compile "io.vertx:vertx-core:$vertxVersion"
     compile "io.vertx:vertx-web:$vertxVersion"
     compile "io.vertx:vertx-service-proxy:$vertxVersion"
-    compile "io.vertx:vertx-codegen:$vertxVersion"
-    compile "io.vertx:vertx-lang-js:$vertxVersion"
-//    compile "io.vertx:vertx-lang-kotlin:$vertxVersion"
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 
+    compileOnly "io.vertx:vertx-codegen:$vertxVersion"
+    compileOnly "io.vertx:vertx-lang-kotlin-codegen:$vertxVersion"
+    compileOnly "io.vertx:vertx-lang-kotlin:$vertxVersion"
+    compileOnly "io.vertx:vertx-lang-js:$vertxVersion"
+    compileOnly "io.vertx:vertx-sockjs-service-proxy:$vertxVersion"
     kapt "io.vertx:vertx-service-proxy:$vertxVersion:processor"
 }
 
@@ -41,11 +42,22 @@ kapt{
 
 sourceSets {
     generated{
-        java.srcDir "${projectDir}/src/main/generated"
+        java.srcDir "${buildDir}/generated/source/kapt/main"
     }
 }
 
 repositories {
     mavenLocal()
     jcenter()
+}
+
+task annotationProcessing(type: JavaCompile, group: 'build') { // codegen
+    source = sourceSets.main.kotlin
+    classpath = configurations.compile + configurations.compileOnly
+    destinationDir = project.file('src/main/generated')
+    options.compilerArgs = [
+            "-proc:only",
+            "-processor", "io.vertx.codegen.CodeGenProcessor",
+            "-AoutputDirectory=${project.projectDir}/src/main"
+    ]
 }

@@ -18,16 +18,17 @@ interface AccountService {
     fun create(account: Account, handler: Handler<AsyncResult<Long>>)
     operator fun get(id: Long, handler: Handler<AsyncResult<Account>>)
 
-    companion object {
+}
 
-        val ADDRESS = "account"
+object AccountServiceFactory {
 
-        fun createService(vertx: Vertx): AccountService {
-            return AccountServiceImpl(vertx)
-        }
+    val ADDRESS = "account"
 
-        fun createProxy(vertx: Vertx, address: String): AccountService {
-            return AccountServiceVertxEBProxy(vertx, address)
-        }
+    fun createService(vertx: Vertx): AccountService {
+        return AccountServiceImpl(vertx)
+    }
+
+    fun createProxy(vertx: Vertx, address: String): AccountService? {
+        return AccountServiceVertxEBProxy(vertx, address)
     }
 }

@@ -5,6 +5,7 @@ import java.lang.System.out
 import io.vertx.core.AbstractVerticle
 import io.vertx.serviceproxy.ServiceBinder
 import mystdeim.vertx_examples.mvn_kotlin_proxy.service.AccountService
+import mystdeim.vertx_examples.mvn_kotlin_proxy.service.AccountServiceFactory
 
 /**
  * @author Roman Novikov
@@ -12,9 +13,9 @@ import mystdeim.vertx_examples.mvn_kotlin_proxy.service.AccountService
 class AccountVerticle : AbstractVerticle() {
 
     override fun start() {
-        val service = AccountService.createService(vertx)
+        val service = AccountServiceFactory.createService(vertx)
         ServiceBinder(vertx)
-                .setAddress(AccountService.ADDRESS)
+                .setAddress(AccountServiceFactory.ADDRESS)
                 .register(AccountService::class.java, service)
         out.println("AccountVerticle deployed!")
     }

@@ -10,7 +10,7 @@ import io.vertx.ext.web.handler.StaticHandler
 import io.vertx.ext.web.handler.sockjs.BridgeOptions
 import io.vertx.ext.web.handler.sockjs.SockJSHandler
 import mystdeim.vertx_examples.mvn_kotlin_proxy.model.Account
-import mystdeim.vertx_examples.mvn_kotlin_proxy.service.AccountService
+import mystdeim.vertx_examples.mvn_kotlin_proxy.service.AccountServiceFactory
 import mystdeim.vertx_examples.mvn_kotlin_proxy.verticle.AccountVerticle
 
 /**
@@ -22,10 +22,10 @@ object App {
     fun main(args: Array<String>) {
         val vertx = Vertx.vertx()
 
-        val accountService = AccountService.createProxy(vertx, AccountService.ADDRESS)
+        val accountService = AccountServiceFactory.createProxy(vertx, AccountServiceFactory.ADDRESS)
         vertx.deployVerticle(AccountVerticle::class.java.name) { handler ->
             val account = Account(1, "test")
-            accountService.create(account, Handler { accountRes ->
+            accountService!!.create(account, Handler { accountRes ->
                 out.println("Account was created " + accountRes.result())
                 accountService.get(account.id, Handler {
                     accountGet -> out.println("Account was got " + accountGet.result())
@@ -36,9 +36,9 @@ object App {
         val router = Router.router(vertx)
         val opts = BridgeOptions()
                 .addInboundPermitted(PermittedOptions()
-                        .setAddress(AccountService.ADDRESS))
+                        .setAddress(AccountServiceFactory.ADDRESS))
                 .addOutboundPermitted(PermittedOptions()
-                        .setAddress(AccountService.ADDRESS))
+                        .setAddress(AccountServiceFactory.ADDRESS))
 
         val ebHandler = SockJSHandler.create(vertx).bridge(opts)
         router.route("/eventbus/*").handler(ebHandler)
