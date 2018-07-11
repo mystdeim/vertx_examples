@@ -30,7 +30,7 @@ dependencies {
 
     compileOnly "io.vertx:vertx-codegen:$vertxVersion"
     compileOnly "io.vertx:vertx-lang-kotlin-codegen:$vertxVersion"
-    compileOnly "io.vertx:vertx-lang-kotlin:$vertxVersion"
+    compileOnly "io.vertx:vertx-lang-kotlin-coroutines:$vertxVersion"
     compileOnly "io.vertx:vertx-lang-js:$vertxVersion"
     compileOnly "io.vertx:vertx-sockjs-service-proxy:$vertxVersion"
     kapt "io.vertx:vertx-service-proxy:$vertxVersion:processor"
@@ -49,15 +49,4 @@ sourceSets {
 repositories {
     mavenLocal()
     jcenter()
-}
-
-task annotationProcessing(type: JavaCompile, group: 'build') { // codegen
-    source = sourceSets.main.kotlin
-    classpath = configurations.compile + configurations.compileOnly
-    destinationDir = project.file('src/main/generated')
-    options.compilerArgs = [
-            "-proc:only",
-            "-processor", "io.vertx.codegen.CodeGenProcessor",
-            "-AoutputDirectory=${project.projectDir}/src/main"
-    ]
 }

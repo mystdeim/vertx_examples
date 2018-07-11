@@ -44,6 +44,13 @@
 
     <dependency>
       <groupId>io.vertx</groupId>
+      <artifactId>vertx-codegen</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>io.vertx</groupId>
       <artifactId>vertx-sockjs-service-proxy</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
@@ -51,11 +58,17 @@
 
     <dependency>
       <groupId>io.vertx</groupId>
-      <artifactId>vertx-codegen</artifactId>
+      <artifactId>vertx-lang-kotlin-codegen</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
 
+    <dependency>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-lang-kotlin-coroutines</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
 
   </dependencies>
 
