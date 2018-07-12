@@ -13,36 +13,30 @@ import mystdeim.vertx_examples.mvn_kotlin_proxy.model.Account
 import mystdeim.vertx_examples.mvn_kotlin_proxy.service.AccountService
 import mystdeim.vertx_examples.mvn_kotlin_proxy.verticle.AccountVerticle
 
-/**
- * Hello world!
- *
- */
-object App {
-    @JvmStatic
-    fun main(args: Array<String>) {
-        val vertx = Vertx.vertx()
 
-        val accountService = AccountService.createProxy(vertx, AccountService.ADDRESS)
-        vertx.deployVerticle(AccountVerticle::class.java.name) { handler ->
-            val account = Account(1, "test")
-            launch {
-                accountService.createAwait(account)
-                val accountRes = accountService.getAwait(account.id)
-                println("Account2 was got ${accountRes}")
-            }
+fun main(args: Array<String>) {
+    val vertx = Vertx.vertx()
+
+    val accountService = AccountService.createProxy(vertx, AccountService.ADDRESS)
+    vertx.deployVerticle(AccountVerticle::class.java.name) { handler ->
+        val account = Account(1, "test")
+        launch {
+            accountService.createAwait(account)
+            val accountRes = accountService.getAwait(account.id)
+            println("Account2 was got ${accountRes}")
         }
-
-        val router = Router.router(vertx)
-        val opts = BridgeOptions()
-                .addInboundPermitted(PermittedOptions()
-                        .setAddress(AccountService.ADDRESS))
-                .addOutboundPermitted(PermittedOptions()
-                        .setAddress(AccountService.ADDRESS))
-
-        val ebHandler = SockJSHandler.create(vertx).bridge(opts)
-        router.route("/eventbus/*").handler(ebHandler)
-        router.route().handler(StaticHandler.create())
-        vertx.createHttpServer().requestHandler(router).listen(8080)
-        println("Web-api was exposed")
     }
+
+    val router = Router.router(vertx)
+    val opts = BridgeOptions()
+            .addInboundPermitted(PermittedOptions()
+                    .setAddress(AccountService.ADDRESS))
+            .addOutboundPermitted(PermittedOptions()
+                    .setAddress(AccountService.ADDRESS))
+
+    val ebHandler = SockJSHandler.create(vertx).bridge(opts)
+    router.route("/eventbus/*").handler(ebHandler)
+    router.route().handler(StaticHandler.create())
+    vertx.createHttpServer().requestHandler(router).listen(8080)
+    println("Web-api was exposed")
 }

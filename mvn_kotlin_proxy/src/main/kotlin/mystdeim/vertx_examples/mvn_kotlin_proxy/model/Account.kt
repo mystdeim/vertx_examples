@@ -7,15 +7,10 @@ import io.vertx.core.json.JsonObject
  * @author Roman Novikov
  */
 @DataObject
-class Account {
+data class Account(
+    var id: Long = 0,
+    var name: String? = null) {
 
-    var id: Long = 0
-    var name: String? = null
-
-    constructor(id: Long, name: String) {
-        this.id = id
-        this.name = name
-    }
 
     fun toJson(): JsonObject {
         val jo = JsonObject()
@@ -24,8 +19,8 @@ class Account {
         return jo
     }
 
-    constructor(jo: JsonObject) {
-        this.id = jo.getLong("id")!!
+    constructor(jo: JsonObject) : this() {
+        this.id = jo.getLong("id")
         this.name = jo.getString("name")
     }
 }
