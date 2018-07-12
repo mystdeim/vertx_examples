@@ -6,6 +6,8 @@ import io.vertx.ext.web.Router
 import io.vertx.ext.web.handler.StaticHandler
 import io.vertx.ext.web.handler.sockjs.BridgeOptions
 import io.vertx.ext.web.handler.sockjs.SockJSHandler
+import io.vertx.kotlin.coroutines.awaitResult
+import io.vertx.kotlin.coroutines.dispatcher
 import kotlinx.coroutines.experimental.launch
 import mystdeim.kotlin.vertx_examples.mvn_kotlin_proxy.service.createAwait
 import mystdeim.kotlin.vertx_examples.mvn_kotlin_proxy.service.getAwait
@@ -16,15 +18,18 @@ import mystdeim.vertx_examples.mvn_kotlin_proxy.verticle.AccountVerticle
 
 fun main(args: Array<String>) {
     val vertx = Vertx.vertx()
-
+    val account = Account(1, "test")
     val accountService = AccountService.createProxy(vertx, AccountService.ADDRESS)
-    vertx.deployVerticle(AccountVerticle::class.java.name) { handler ->
-        val account = Account(1, "test")
-        launch {
-            accountService.createAwait(account)
-            val accountRes = accountService.getAwait(account.id)
-            println("Account2 was got ${accountRes}")
+
+    launch(vertx.dispatcher()) {
+        val id = awaitResult<String> {
+            vertx.deployVerticle(AccountVerticle::class.java.name, it)
         }
+        println("Verticle was deployed with ID=${id}")
+
+        accountService.createAwait(account)
+        val accountRes = accountService.getAwait(account.id)
+        println("Account2 was got ${accountRes}")
     }
 
     val router = Router.router(vertx)
