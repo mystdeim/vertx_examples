@@ -1,14 +1,14 @@
 package mystdeim.vertx_examples.mvn_kotlin_proxy
 
-import io.vertx.core.Handler
-import java.lang.System.out
-
 import io.vertx.core.Vertx
 import io.vertx.ext.bridge.PermittedOptions
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.handler.StaticHandler
 import io.vertx.ext.web.handler.sockjs.BridgeOptions
 import io.vertx.ext.web.handler.sockjs.SockJSHandler
+import kotlinx.coroutines.experimental.launch
+import mystdeim.kotlin.vertx_examples.mvn_kotlin_proxy.service.createAwait
+import mystdeim.kotlin.vertx_examples.mvn_kotlin_proxy.service.getAwait
 import mystdeim.vertx_examples.mvn_kotlin_proxy.model.Account
 import mystdeim.vertx_examples.mvn_kotlin_proxy.service.AccountService
 import mystdeim.vertx_examples.mvn_kotlin_proxy.verticle.AccountVerticle
@@ -25,12 +25,11 @@ object App {
         val accountService = AccountService.createProxy(vertx, AccountService.ADDRESS)
         vertx.deployVerticle(AccountVerticle::class.java.name) { handler ->
             val account = Account(1, "test")
-            accountService.create(account, Handler { accountRes ->
-                out.println("Account was created " + accountRes.result())
-                accountService.get(account.id, Handler {
-                    accountGet -> out.println("Account was got " + accountGet.result())
-                })
-            })
+            launch {
+                accountService.createAwait(account)
+                val accountRes = accountService.getAwait(account.id)
+                println("Account2 was got ${accountRes}")
+            }
         }
 
         val router = Router.router(vertx)
@@ -44,6 +43,6 @@ object App {
         router.route("/eventbus/*").handler(ebHandler)
         router.route().handler(StaticHandler.create())
         vertx.createHttpServer().requestHandler(router).listen(8080)
-        out.println("Web-api was exposed")
+        println("Web-api was exposed")
     }
 }

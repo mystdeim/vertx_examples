@@ -1,5 +1,6 @@
 package mystdeim.vertx_examples.mvn_kotlin_proxy.service
 
+import io.vertx.codegen.annotations.GenIgnore
 import io.vertx.codegen.annotations.ProxyGen
 import io.vertx.codegen.annotations.VertxGen
 import io.vertx.core.AsyncResult
@@ -18,6 +19,7 @@ interface AccountService {
     fun create(account: Account, handler: Handler<AsyncResult<Long>>)
     operator fun get(id: Long, handler: Handler<AsyncResult<Account>>)
 
+    @GenIgnore
     companion object {
 
         val ADDRESS = "account"
