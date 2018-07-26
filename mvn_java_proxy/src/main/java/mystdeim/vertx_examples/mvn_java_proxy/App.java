@@ -2,6 +2,7 @@ package mystdeim.vertx_examples.mvn_java_proxy;
 
 import static java.lang.System.out;
 
+import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 import io.vertx.ext.bridge.PermittedOptions;
 import io.vertx.ext.web.Router;
@@ -29,6 +30,11 @@ public class App
             accountService.create(account, accountRes -> {
                 out.println("Account was created " + accountRes.result());
                 accountService.get(account.getId(), accountGet -> {
+                    out.println("Account was got " + accountGet.result());
+                });
+
+                Future<Account> f = accountService.get(account.getId());
+                f.setHandler(accountGet -> {
                     out.println("Account was got " + accountGet.result());
                 });
             });
