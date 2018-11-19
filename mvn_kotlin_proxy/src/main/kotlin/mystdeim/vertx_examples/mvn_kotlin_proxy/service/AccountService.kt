@@ -2,12 +2,14 @@ package mystdeim.vertx_examples.mvn_kotlin_proxy.service
 
 import io.vertx.codegen.annotations.GenIgnore
 import io.vertx.codegen.annotations.ProxyGen
+import io.vertx.codegen.annotations.ProxyIgnore
 import io.vertx.codegen.annotations.VertxGen
 import io.vertx.core.AsyncResult
 import io.vertx.core.Handler
 import io.vertx.core.Vertx
 import mystdeim.vertx_examples.mvn_kotlin_proxy.model.Account
 import mystdeim.vertx_examples.mvn_kotlin_proxy.service.impl.AccountServiceImpl
+import mystdeim.vertx_examples.mvn_kotlin_proxy.service.AccountServiceVertxEBProxy
 
 /**
  * @author Roman Novikov

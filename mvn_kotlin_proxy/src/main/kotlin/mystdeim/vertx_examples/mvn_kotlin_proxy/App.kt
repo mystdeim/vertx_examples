@@ -8,7 +8,8 @@ import io.vertx.ext.web.handler.sockjs.BridgeOptions
 import io.vertx.ext.web.handler.sockjs.SockJSHandler
 import io.vertx.kotlin.coroutines.awaitResult
 import io.vertx.kotlin.coroutines.dispatcher
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import mystdeim.kotlin.vertx_examples.mvn_kotlin_proxy.service.createAwait
 import mystdeim.kotlin.vertx_examples.mvn_kotlin_proxy.service.getAwait
 import mystdeim.vertx_examples.mvn_kotlin_proxy.model.Account
@@ -21,7 +22,7 @@ fun main(args: Array<String>) {
     val account = Account(1, "test")
     val accountService = AccountService.createProxy(vertx, AccountService.ADDRESS)
 
-    launch(vertx.dispatcher()) {
+    GlobalScope.launch(vertx.dispatcher()) {
         val id = awaitResult<String> {
             vertx.deployVerticle(AccountVerticle::class.java.name, it)
         }
